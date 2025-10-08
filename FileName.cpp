@@ -14,15 +14,20 @@ private:
             hryvnia += kopiyky / 100;
             kopiyky %= 100;
         }
-        if (hryvnia > 0 && kopiyky < 0) {
-            hryvnia -= 1;
-            kopiyky += 100;
-        }
     }
 
 public:
     Money() : hryvnia(0), kopiyky(0) {}
     Money(long grn, unsigned char kop) : hryvnia(grn), kopiyky(kop) { normalize(); }
+    Money(long long totalKopecks) {
+        hryvnia = totalKopecks / 100;
+        kopiyky = totalKopecks % 100;
+        normalize();
+    }
+    Money(const Money& other) {
+        hryvnia = other.hryvnia;
+        kopiyky = other.kopiyky;
+    }
 
     void Init(long grn, unsigned char kop) {
         hryvnia = grn;
@@ -86,31 +91,30 @@ public:
 };
 
 int main() {
-    Money m1, m2;
-    cout << "Enter first amount:" << endl;
-    m1.Read();
-    cout << "Enter second amount:" << endl;
-    m2.Read();
+    Money m1;
+    Money m2(10, 50);
+    Money m3(12345);
+    Money m4(m2);
 
-    cout << "First amount: "; m1.Display();
-    cout << "Second amount: "; m2.Display();
+    cout << "m1: " << m1.toString() << endl;
+    cout << "m2: " << m2.toString() << endl;
+    cout << "m3: " << m3.toString() << endl;
+    cout << "m4: " << m4.toString() << endl;
 
-    Money sum = m1 + m2;
+    Money sum = m2 + m3;
     cout << "Sum: " << sum.toString() << endl;
 
-    Money diff = m1 - m2;
+    Money diff = m2 - m3;
     cout << "Difference: " << diff.toString() << endl;
 
-    double factor = 1.5;
+    Money multSum = sum * 1.5;
+    cout << "Sum * 1.5: " << multSum.toString() << endl;
 
-    Money multSum = sum * factor;
-    cout << "Sum * " << factor << ": " << multSum.toString() << endl;
+    Money divSum = sum / 1.5;
+    cout << "Sum / 1.5: " << divSum.toString() << endl;
 
-    Money divSum = sum / factor;
-    cout << "Sum / " << factor << ": " << divSum.toString() << endl;
-
-    if (m1 > m2) cout << "First amount is greater than second." << endl;
-    else cout << "First amount is not greater than second." << endl;
+    if (m2 > m3) cout << "m2 > m3" << endl;
+    else cout << "m2 < m3" << endl;
 
     return 0;
 }
